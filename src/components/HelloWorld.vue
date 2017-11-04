@@ -3,11 +3,17 @@
     <h1>{{ msg }}</h1>
     <div>{{ currentUser.email }}</div>
     <button v-on:click="logout">Logout</button>
+    <div v-for="point in points">
+      <div>{{ point }}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import firebase from 'firebase';
+import firebase from '../firebase'
+let db = firebase.database();
+let pointsRef = db.ref('points');
+
 export default {
   name: 'HelloWorld',
   data () {
@@ -15,6 +21,9 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       currentUser: firebase.auth().currentUser
     }
+  },
+  firebase:{
+    points: pointsRef
   },
   methods: {
     logout: function(){
