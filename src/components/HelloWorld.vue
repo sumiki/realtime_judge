@@ -27,12 +27,14 @@
             <thead>
               <tr>
                 <th>Point</th>
+                <th>Email</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="point in points">
-                <td>{{ point }}</td>
+                <td>{{ point.point }}</td>
+                <td>{{ point.user_email }}</td>
                 <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(point)"></span></td>
               </tr>
             </tbody>
@@ -48,6 +50,7 @@ import firebase from '../firebase'
 let db = firebase.database();
 let pointsRef = db.ref('points');
 
+
 export default {
   name: 'HelloWorld',
   data () {
@@ -60,7 +63,7 @@ export default {
     }
   },
   firebase:{
-    points: pointsRef
+    points: pointsRef.orderByChild('user_email').equalTo( 'sumikio@gmail.com' )
   },
   methods: {
     logout: function(){
