@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <div>{{ currentUser.email }}</div>
     <button v-on:click="logout">Logout</button>
   </div>
 </template>
@@ -11,7 +12,8 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      currentUser: firebase.auth().currentUser
     }
   },
   methods: {
