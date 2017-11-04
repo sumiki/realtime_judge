@@ -62,8 +62,10 @@ export default {
       }
     }
   },
-  firebase:{
-    points: pointsRef.orderByChild('user_email').equalTo( 'sumikio@gmail.com' )
+  firebase: function(){
+    return {
+      points: pointsRef.orderByChild('user_email').equalTo( firebase.auth().currentUser.email )
+    }
   },
   methods: {
     logout: function(){
