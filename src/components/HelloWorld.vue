@@ -13,8 +13,9 @@
       <form id="form" class="form-inline" v-on:submit.prevent="addPoint" >
         <div class="form-group">
           <label for="point">Point:</label>
-          <input type="text" id="point" class="form-control" v-model="newPoint.point"/>
+          <input type="text" id="point" class="form-control" v-model="newPoint.point" autocomplete="off" maxlength="2" size="2" />
           <input type="submit" class="btn btn-primary" value="Add Point" />
+          <div class="errors" >{{ point_error }}</div>
         </div>
       </form>
     </div>
@@ -58,7 +59,21 @@ export default {
       currentUser: this.$store.state.user,
       newPoint: {
         point: '',
-        user_email: ''
+        user_email: this.$store.state.user.email
+      }
+    }
+  },
+  computed: {
+    validation: function(){
+      return {
+        point: /^[0-9]$|^10$/.test( this.newPoint.point )
+      }
+    },
+    point_error: function(){
+      if ( this.newPoint.point == '' || this.validation.point ){
+            return ''
+      } else {
+            return 'Invalid Number'
       }
     }
   },
@@ -74,8 +89,10 @@ export default {
       })
     },
     addPoint: function(){
-      pointsRef.push( this.newPoint )
-      this.newPoint.point = ''
+      if( this.validation.point ){
+        pointsRef.push( this.newPoint )
+        this.newPoint.point = ''
+      }
     },
     removePoint: function(point){
       pointsRef.child(point['.key']).remove();
@@ -102,5 +119,9 @@ li {
 
 a {
   color: #42b983;
+}
+
+div.errors{
+  color: red;
 }
 </style>
