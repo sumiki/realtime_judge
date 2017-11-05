@@ -55,16 +55,16 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      currentUser: firebase.auth().currentUser,
+      currentUser: this.$store.state.user,
       newPoint: {
         point: '',
-        user_email: firebase.auth().currentUser.email
+        user_email: ''
       }
     }
   },
   firebase: function(){
     return {
-      points: pointsRef.orderByChild('user_email').equalTo( firebase.auth().currentUser.email )
+      points: pointsRef.orderByChild('user_email').equalTo( this.$store.state.user.email )
     }
   },
   methods: {
