@@ -19,7 +19,25 @@
         </div>
       </form>
     </div>
-
+    <div class="panel-heading">
+      <h3>Heats</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Heat Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="heat in heats">
+              <td>{{ heat.name }}</td>
+              <td><span class="glyphicon glyphicon-trash" v-on:click="removeHeat(heat)"></span></td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
 
     </div>
 
@@ -58,7 +76,7 @@ export default {
   },
   firebase: function(){
     return {
-      points: heatsRef
+      heats: heatsRef
     }
   },
   methods: {
@@ -68,14 +86,13 @@ export default {
       })
     },
     addHeat: function(){
-    console.log( this.validation.heatName )
       if( this.validation.heatName ){
         heatsRef.push( this.newHeat )
-        this.newHeat.point = ''
+        this.newHeat.name = ''
       }
     },
-    removePoint: function(point){
-      heatsRef.child(point['.key']).remove();
+    removeHeat: function(heat){
+      heatsRef.child(heat['.key']).remove();
     }
   }
 }
