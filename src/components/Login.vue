@@ -1,10 +1,10 @@
 <template>
   <div class="login">
-    <h3>Sign In</h3>
+    <h3>Login</h3>
     <form id="form" class="form-inline" v-on:submit.prevent="signIn" >
     <input type="text" v-model="email" placeholder="Email"><br>
     <input type="password" v-model="password" placeholder="Password"><br>
-    <button >Connection</button>
+    <button >Login</button>
     </form>
     <p>You don't have an account ? You can <router-link to="/sign-up">create one</router-link></p>
   </div>
@@ -38,6 +38,7 @@ export default {
 <style scoped>  /* "scoped" attribute limit the CSS to this component only */
 .login {
   margin-top: 40px;
+  text-align: center;
 }
 input {
   margin: 10px 0;

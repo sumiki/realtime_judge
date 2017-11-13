@@ -34,8 +34,9 @@
 </script>
 
 <style scoped>
-  .signUp {
+  .sign-up {
     margin-top: 40px;
+    text-align: center;
   }
   input {
     margin: 10px 0;
