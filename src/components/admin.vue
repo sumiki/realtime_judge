@@ -6,46 +6,53 @@
       <button v-on:click="logout">Logout</button>
     </div>
     <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3>Add Heat</h3>
-    </div>
-    <div class="panel-body">
-      <form id="form" class="form-inline" v-on:submit.prevent="addHeat" >
-        <div class="form-group">
-          <label for="heat">Heat:</label>
-          <div style="display: inline-block;">
-            <input type="text" id="heat" class="form-control" v-model="newHeat.name" autocomplete="off" maxlength="20" size="20" />
-            <div class="errors" >{{ heatNameError }}</div>
+      <div class="panel-heading">
+        <h3>Add Heat</h3>
+      </div>
+      <div class="panel-body">
+        <form id="form" class="form-inline" v-on:submit.prevent="addHeat" >
+          <div class="form-group">
+            <label for="heat">Heat:</label>
+            <div style="display: inline-block;">
+              <input type="text" id="heat" class="form-control" v-model="newHeat.name" autocomplete="off" maxlength="20" size="20" />
+              <div class="errors" >{{ heatNameError }}</div>
+            </div>
+            <label for="heat">Start Time:</label>
+            <div style="display: inline-block;">
+              <input type="text" id="heat" class="form-control" v-model="newHeat.start_time" autocomplete="off" placeholder="12:00" maxlength="5" size="5" />
+              <div class="errors" >{{ heatStartTimeError }}</div>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Add Heat" />
           </div>
-          <label for="heat">Start Time:</label>
-          <div style="display: inline-block;">
-            <input type="text" id="heat" class="form-control" v-model="newHeat.start_time" autocomplete="off" placeholder="12:00" maxlength="5" size="5" />
-            <div class="errors" >{{ heatStartTimeError }}</div>
-          </div>
-          <input type="submit" class="btn btn-primary" value="Add Heat" />
-        </div>
-      </form>
-    </div>
-    <div class="panel-heading">
-      <h3>Heats</h3>
-    </div>
-    <div class="panel-body">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Heat Name</th>
-              <th>Start Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="heat in heats">
-              <td>{{ heat.name }}</td>
-              <td>{{ heat.start_time }}</td>
-              <td><span class="glyphicon glyphicon-trash" v-on:click="removeHeat(heat)"></span></td>
-            </tr>
-          </tbody>
-        </table>
-    </div>
+        </form>
+      </div>
+      <div class="panel-heading">
+        <h3>Heats</h3>
+      </div>
+      <div class="panel-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Heat Name</th>
+                <th>Start Time</th>
+                <th>Player</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="heat in heats">
+                <td>{{ heat.name }}</td>
+                <td>{{ heat.start_time }}</td>
+                <td>
+                    <div v-for="player in heat.players">
+                      <div>{{ player.color }}</div>
+                    </div>
+                </td>
+                <td><span class="glyphicon glyphicon-trash" v-on:click="removeHeat(heat)"></span></td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
 
     </div>
 
@@ -65,7 +72,27 @@ export default {
       currentUser: this.$store.state.user,
       newHeat: {
         name: '',
-        start_time: ''
+        start_time: '',
+        players: [
+          {
+            color: "red"
+          },
+          {
+            color: "blue"
+          },
+          {
+            color: "green"
+          },
+          {
+            color: "pink"
+          },
+          {
+            color: "yellow"
+          },
+          {
+            color: "white"
+          }
+        ]
       }
     }
   },
