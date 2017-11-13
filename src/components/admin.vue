@@ -44,9 +44,7 @@
                 <td>{{ heat.name }}</td>
                 <td>{{ heat.start_time }}</td>
                 <td>
-                    <div v-for="player in heat.players">
-                      <div>{{ player.color }}</div>
-                    </div>
+                  <div v-for="player in heat.players">{{ player.color }}</div>
                 </td>
                 <td><span class="glyphicon glyphicon-trash" v-on:click="removeHeat(heat)"></span></td>
               </tr>
@@ -120,7 +118,7 @@ export default {
   },
   firebase: function(){
     return {
-      heats: heatsRef
+      heats: heatsRef.orderByChild('start_time')
     }
   },
   methods: {
