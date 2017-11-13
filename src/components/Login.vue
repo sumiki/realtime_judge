@@ -24,7 +24,7 @@ export default {
     signIn: function () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
         (user) => {
-          this.$router.replace('hello')
+          this.$router.replace('judges')
         },
         function(err){
           alert('Error' + err.message)

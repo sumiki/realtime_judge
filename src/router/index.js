@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Judges from '@/components/judges'
+import Judges from '@/components/Judges'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Admin from '@/components/Admin'

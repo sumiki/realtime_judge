@@ -33,8 +33,8 @@
                   <th></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="point in points" v-if="point.heat_id == currentHeat['.key'] && point.player_color == player.color">
+              <tbody v-if="points" style="vertical-align: top;">
+                <tr v-for="point in points" v-if="point.user_email == currentUser.email && point.heat_id == currentHeat['.key'] && point.player_color == player.color">
                   <td>{{ point.point }}</td>
                   <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(point)"></span></td>
                 </tr>
@@ -84,7 +84,7 @@ export default {
   },
   firebase: function(){
     return {
-      points: pointsRef.orderByChild('user_email').equalTo( this.$store.state.user.email ),
+      points: pointsRef,
       heats: heatsRef.orderByChild('start_time')
     }
   },
