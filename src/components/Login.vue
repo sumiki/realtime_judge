@@ -1,9 +1,11 @@
 <template>
   <div class="login">
     <h3>Sign In</h3>
+    <form id="form" class="form-inline" v-on:submit.prevent="signIn" >
     <input type="text" v-model="email" placeholder="Email"><br>
     <input type="password" v-model="password" placeholder="Password"><br>
-    <button v-on:click="signIn">Connection</button>
+    <button >Connection</button>
+    </form>
     <p>You don't have an account ? You can <router-link to="/sign-up">create one</router-link></p>
   </div>
 </template>

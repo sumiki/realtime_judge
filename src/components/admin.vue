@@ -13,9 +13,16 @@
       <form id="form" class="form-inline" v-on:submit.prevent="addHeat" >
         <div class="form-group">
           <label for="heat">Heat:</label>
-          <input type="text" id="heat" class="form-control" v-model="newHeat.name" autocomplete="off" maxlength="20" size="20" />
+          <div style="display: inline-block;">
+            <input type="text" id="heat" class="form-control" v-model="newHeat.name" autocomplete="off" maxlength="20" size="20" />
+            <div class="errors" >{{ heatNameError }}</div>
+          </div>
+          <label for="heat">Start Time:</label>
+          <div style="display: inline-block;">
+            <input type="text" id="heat" class="form-control" v-model="newHeat.start_time" autocomplete="off" placeholder="12:00" maxlength="5" size="5" />
+            <div class="errors" >{{ heatStartTimeError }}</div>
+          </div>
           <input type="submit" class="btn btn-primary" value="Add Heat" />
-          <div class="errors" >{{ heat_error }}</div>
         </div>
       </form>
     </div>
@@ -27,12 +34,13 @@
           <thead>
             <tr>
               <th>Heat Name</th>
-              <th></th>
+              <th>Start Time</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="heat in heats">
               <td>{{ heat.name }}</td>
+              <td>{{ heat.start_time }}</td>
               <td><span class="glyphicon glyphicon-trash" v-on:click="removeHeat(heat)"></span></td>
             </tr>
           </tbody>
@@ -57,17 +65,26 @@ export default {
       currentUser: this.$store.state.user,
       newHeat: {
         name: '',
+        start_time: ''
       }
     }
   },
   computed: {
     validation: function(){
       return {
-        heatName: true
+        heatName: true,
+        startTime: /^[0-9]{2}:[0-9]{2}$/.test( this.newHeat.start_time )
       }
     },
-    heat_error: function(){
+    heatNameError: function(){
       if ( this.newHeat.name == '' || this.validation.heatName ){
+            return ''
+      } else {
+            return 'Invalid'
+      }
+    },
+    heatStartTimeError: function(){
+      if ( this.newHeat.start_time == '' || this.validation.startTime ){
             return ''
       } else {
             return 'Invalid'
@@ -86,9 +103,10 @@ export default {
       })
     },
     addHeat: function(){
-      if( this.validation.heatName ){
+      if( this.validation.heatName && this.validation.startTime ){
         heatsRef.push( this.newHeat )
         this.newHeat.name = ''
+        this.newHeat.start_time = ''
       }
     },
     removeHeat: function(heat){
@@ -120,5 +138,7 @@ a {
 
 div.errors{
   color: red;
+  height: 1em;
+position: absolute;
 }
 </style>
