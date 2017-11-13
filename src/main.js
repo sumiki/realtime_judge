@@ -13,16 +13,15 @@ Vue.use( VueFire )
 
 let app;
 firebase.auth().onAuthStateChanged(function(user){
-
-  if( !app ){
     store.commit('setUser', user || false);
-    app = new Vue({
-      el: '#app',
-      router,
-      template: '<App/>',
-      components: { App },
-      store: store
-    })
-  }
+    if( !app ){
+      app = new Vue({
+        el: '#app',
+        router,
+        template: '<App/>',
+        components: { App },
+        store: store
+      })
+    }
 })
 /* eslint-disable no-new */
