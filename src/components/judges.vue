@@ -20,15 +20,7 @@
         </tr>
         <tr>
           <td v-for="player in currentHeat.players">
-            <div>Add Point</div>
-            <form id="form" class="form-inline" v-on:submit.prevent="addPoint( currentHeat['.key'], player['.key'] )" >
-              <div class="form-group">
-                <label for="point">Point:</label>
-                <input type="text" id="point" class="form-control" v-model="newPoint.point" autocomplete="off" maxlength="2" size="2" />
-                <input type="submit" class="btn btn-primary" value="Add Point" />
-                <div class="errors" >{{ point_error }}</div>
-              </div>
-            </form>
+          <Judge v-bind:currentHeat="currentHeat" v-bind:player="player"></Judge>
           </td>
         </tr>
         <tr>
@@ -42,7 +34,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="point in points">
+                <tr v-for="point in points" v-if="point.heat_id == currentHeat['.key'] && point.player_color == player.color">
                   <td>{{ point.point }}</td>
                   <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(point)"></span></td>
                 </tr>
@@ -59,39 +51,23 @@
 
 <script>
 import firebase from '../firebase'
+import Judge from './Judge.vue'
 let db = firebase.database();
 let pointsRef = db.ref('points');
 let heatsRef = db.ref('heats');
 
 
 export default {
-  name: 'HelloWorld',
+  name: 'Judges',
+  components: {
+    Judge: Judge
+  },
   data () {
     return {
-      currentUser: this.$store.state.user,
-      newPoint: ( () => {
-        console.log( this.currentHeat )
-        return {
-          point: '',
-          user_email: this.$store.state.user.email
-        }
-      } )()
+      currentUser: this.$store.state.user
     }
   },
   computed: {
-    validation: function(){
-      return {
-        point: /^[0-9]$|^10$/.test( this.newPoint.point )
-      }
-    },
-    point_error: function(){
-      console.log( this.newPoint.point )
-      if ( this.newPoint.point == '' || this.validation.point ){
-            return ''
-      } else {
-            return 'Invalid Number'
-      }
-    },
     currentHeat: function(){
       if( ! this.$store.state.currentHeat.name ){
         if( this.heats[0] ){
@@ -117,14 +93,6 @@ export default {
       firebase.auth().signOut().then(() => {
       this.$router.replace('login')
       })
-    },
-    addPoint: function( heat_id, player_id ){
-      if( this.validation.point ){
-        this.newPoint.heat_id = heat_id
-        this.newPoint.player_id = player_id
-        pointsRef.push( this.newPoint )
-        this.newPoint.point = ''
-      }
     },
     removePoint: function(point){
       pointsRef.child(point['.key']).remove();
@@ -156,9 +124,6 @@ a {
   color: #42b983;
 }
 
-div.errors{
-  color: red;
-}
 
 div.spacer{
   width: 100%;

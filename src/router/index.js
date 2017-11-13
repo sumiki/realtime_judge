@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import HelloWorld from '@/components/HelloWorld'
+import Judges from '@/components/judges'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Admin from '@/components/Admin'
@@ -30,9 +30,9 @@ let router = new Router({
       component: SignUp
     },
     {
-      path: '/hello',
-      name: 'Hello',
-      component: HelloWorld,
+      path: '/judges',
+      name: 'Judges',
+      component: Judges,
       meta: {
         requiresAuth: true
       }
@@ -59,7 +59,7 @@ router.beforeEach((to, from, next) => {
   let requiresAdminAuth = to.matched.some( record => record.meta.requiresAdminAuth )
   if ( requiresAuth && !currentUser ) next('login')
   else if( !requiresAdminAuth && adminUser ) next('admin')
-  else if( !requiresAuth && currentUser  ) next('hello')
+  else if( !requiresAuth && currentUser  ) next('judges')
   else next()
 
 })
