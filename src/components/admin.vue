@@ -77,7 +77,7 @@ import firebase from '../firebase'
 import './../assets/color_tags.css'
 let db = firebase.database();
 let heatsRef = db.ref('heats');
-
+let pointsRef = db.ref('points');
 
 export default {
   name: 'Admin',
