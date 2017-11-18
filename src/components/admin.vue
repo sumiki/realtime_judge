@@ -35,6 +35,7 @@
               <tr>
                 <th>Heat Name</th>
                 <th>Start Time</th>
+                <th>Publish</th>
                 <th class="player">Player</th>
                 <th></th>
               </tr>
@@ -43,6 +44,10 @@
               <tr v-for="heat in heats">
                 <td>{{ heat.name }}</td>
                 <td>{{ heat.start_time }}</td>
+                <td>
+                  <div v-if="heat.published" v-on:click="unpublish(heat)"><button>Unpublish</button></div>
+                  <div v-else><button v-on:click="publish(heat)">Publish</button></div>
+                </td>
                 <td>
                   <div v-for="player in heat.players">
                     <span v-on:click="showNameField(heat, player.color)" class="color_tag" v-bind:class="[ `${player.color}_tag` ]" >{{ player.color }}</span>
@@ -82,6 +87,7 @@ export default {
       newHeat: {
         name: '',
         start_time: '',
+        published: false,
         players: [
           {
             color: "red",
@@ -163,6 +169,18 @@ export default {
       delete item['.key']
       heatsRef.child(heat['.key']).set(item)
       this.showNameFieldKey = ''
+    },
+    publish: function(heat){
+      var item = {...heat}
+      item.published = true
+      delete item['.key']
+      heatsRef.child(heat['.key']).set(item)
+    },
+    unpublish: function(heat){
+      var item = {...heat}
+      item.published = false
+      delete item['.key']
+      heatsRef.child(heat['.key']).set(item)
     }
   },
   updated: function () {

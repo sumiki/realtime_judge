@@ -125,7 +125,7 @@ export default {
     firstPoint: function(color){
       var target_points = []
       for( let point of this.points ){
-        if( point.player_color == color ){
+        if( point.player_color == color && point.heat_id == this.currentHeat['.key']  ){
           target_points.push( point.point )
         }
       }
