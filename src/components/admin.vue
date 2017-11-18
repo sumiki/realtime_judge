@@ -35,7 +35,7 @@
               <tr>
                 <th>Heat Name</th>
                 <th>Start Time</th>
-                <th>Player</th>
+                <th class="player">Player</th>
                 <th></th>
               </tr>
             </thead>
@@ -44,7 +44,17 @@
                 <td>{{ heat.name }}</td>
                 <td>{{ heat.start_time }}</td>
                 <td>
-                  <div v-for="player in heat.players">{{ player.color }}</div>
+                  <div v-for="player in heat.players">
+                    <span v-on:click="showNameField(heat, player.color)" class="color_tag" v-bind:class="[ `${player.color}_tag` ]" >{{ player.color }}</span>
+                    <div class="name_form_area" v-if="( showNameFieldKey == `${heat['.key']}-${ player.color }` )">
+                      <form v-on:submit="addName( heat )">
+                      <input type="text" v-model="player.name" ref="player_name" />
+                      <input type="submit" class="btn btn-primary" value="Add" />
+                      </form>
+
+                    </div>
+                    <span v-else>{{ player.name }}</span>
+                  </div>
                 </td>
                 <td><span class="glyphicon glyphicon-trash" v-on:click="removeHeat(heat)"></span></td>
               </tr>
@@ -59,6 +69,7 @@
 
 <script>
 import firebase from '../firebase'
+import './../assets/color_tags.css'
 let db = firebase.database();
 let heatsRef = db.ref('heats');
 
@@ -73,25 +84,32 @@ export default {
         start_time: '',
         players: [
           {
-            color: "red"
+            color: "red",
+            name: ""
           },
           {
-            color: "blue"
+            color: "blue",
+            name: ""
           },
           {
-            color: "green"
+            color: "green",
+            name: ""
           },
           {
-            color: "pink"
+            color: "pink",
+            name: ""
           },
           {
-            color: "yellow"
+            color: "yellow",
+            name: ""
           },
           {
-            color: "white"
+            color: "white",
+            name: ""
           }
         ]
-      }
+      },
+      showNameFieldKey: false
     }
   },
   computed: {
@@ -136,6 +154,20 @@ export default {
     },
     removeHeat: function(heat){
       heatsRef.child(heat['.key']).remove();
+    },
+    showNameField: function(heat, color){
+      this.showNameFieldKey = `${heat['.key']}-${ color }`
+    },
+    addName: function(heat){
+      var item = {...heat}
+      delete item['.key']
+      heatsRef.child(heat['.key']).set(item)
+      this.showNameFieldKey = ''
+    }
+  },
+  updated: function () {
+    if( ( Object.keys( this.$refs ).length > 0 ) && this.$refs.player_name[0] ){
+      this.$refs.player_name[0].focus()
     }
   }
 }
@@ -164,6 +196,16 @@ a {
 div.errors{
   color: red;
   height: 1em;
-position: absolute;
+  position: absolute;
 }
+
+th.player{
+  width: 420px;
+}
+
+div.name_form_area{
+  display: inline-block;
+}
+
+
 </style>

@@ -1,0 +1,30 @@
+span.color_tag{
+  display: inline-block;
+  border-radius: 2px;
+  cursor: pointer;
+  width: 70px;
+  display: inline-block;
+  text-align: center;
+  margin: 2px;
+}
+span.red_tag{
+  background: red;
+  color: #DDDDDD;
+}
+span.blue_tag{
+  background: blue;
+  color: #DDDDDD;
+}
+span.green_tag{
+  background: green;
+  color: #DDDDDD;
+}
+span.pink_tag{
+  background: pink;
+}
+span.yellow_tag{
+  background: yellow;
+}
+span.white_tag{
+  background: white;
+}

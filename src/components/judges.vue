@@ -16,7 +16,10 @@
     <div class="panel panel-default">
       <table class="table">
         <tr>
-          <th v-for="player in currentHeat.players" ><h3>{{ player.color }}</h3></th>
+          <th v-for="player in currentHeat.players" >
+            <span class="color_tag" v-bind:class="[ `${player.color}_tag` ]" >{{ player.color }}</span>
+            <div>{{ player.name ? player.name.toString().slice(0,20) : '' }}</div>
+          </th>
         </tr>
         <tr>
           <td v-for="player in currentHeat.players">
@@ -24,9 +27,27 @@
           </td>
         </tr>
         <tr>
-          <td v-for="player in currentHeat.players">
+          <td style="vertical-align: top;" v-for="player in currentHeat.players">
           <div class="panel-body">
             <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Total:</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>1st:</th>
+                  <td>{{ firstPoint( player.color ) }}</td>
+                </tr>
+                <tr>
+                  <th>2nd:</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>Needs:</th>
+                  <td></td>
+                </tr>
+              </thead>
               <thead>
                 <tr>
                   <th>Point</th>
@@ -51,6 +72,7 @@
 
 <script>
 import firebase from '../firebase'
+import './../assets/color_tags.css'
 import Judge from './Judge.vue'
 let db = firebase.database();
 let pointsRef = db.ref('points');
@@ -99,6 +121,16 @@ export default {
     },
     selectHeat: function(heat){
       this.$store.commit('setCurrentHeat', heat);
+    },
+    firstPoint: function(color){
+      var target_points = []
+      for( let point of this.points ){
+        if( point.player_color == color ){
+          target_points.push( point.point )
+        }
+      }
+      var sorted_points = target_points.sort()
+      return sorted_points[ sorted_points.length - 1 ]
     }
   }
 }
