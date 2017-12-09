@@ -25,7 +25,7 @@
             </tr>
             <tr>
               <td v-for="player in heat.players">
-              <Judge v-bind:heat="heat" v-bind:player="player"></Judge>
+              <Judge v-bind:currentHeat="heat" v-bind:player="player"></Judge>
               </td>
             </tr>
             <tr>
@@ -39,7 +39,7 @@
                     </tr>
                     <tr>
                       <th>1st:</th>
-                      <td>{{ firstPoint( player.color ) }}</td>
+                      <td>{{ firstPoint( player ) }}</td>
                     </tr>
                     <tr>
                       <th>2nd:</th>
@@ -60,10 +60,10 @@
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody v-if="points" style="vertical-align: top;">
-                    <tr v-for="point in points" v-if="point.user_email == currentUser.email && point.heat_id == heat['.key'] && point.player_color == player.color">
+                  <tbody v-if="player.points" style="vertical-align: top;">
+                    <tr v-for="point in player.points">
                       <td>{{ point.point }}</td>
-                      <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(point)"></span></td>
+                      <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(player,point)"></span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -84,7 +84,6 @@ import firebase from '../firebase'
 import './../assets/color_tags.css'
 import Judge from './Judge.vue'
 let db = firebase.database();
-let pointsRef = db.ref('points');
 let heatsRef = db.ref('heats');
 
 
@@ -115,7 +114,6 @@ export default {
   },
   firebase: function(){
     return {
-      points: pointsRef,
       heats: heatsRef.orderByChild('start_time')
     }
   },
@@ -125,17 +123,20 @@ export default {
       this.$router.replace('login')
       })
     },
-    removePoint: function(point){
+    removePoint: function(player, point){
+      player.points
       pointsRef.child(point['.key']).remove();
     },
     selectHeat: function(heat){
       this.$store.commit('setCurrentHeat', heat);
     },
-    firstPoint: function(color){
+    firstPoint: function(player){
       var target_points = []
-      for( let point of this.points ){
-        if( point.player_color == color && point.heat_id == this.currentHeat['.key']  ){
-          target_points.push( point.point )
+      if(player.points){
+        for( let point of player.points ){
+          if( point.player_color == player.color && point.heat_id == this.currentHeat['.key']  ){
+            target_points.push( point.point )
+          }
         }
       }
       var sorted_points = target_points.sort()
@@ -143,11 +144,14 @@ export default {
     },
     number_of_judged_point: function(currentHeat, player){
       let num = 0
-      for( let point of this.points ){
-        if( point.player_color == player.color && point.heat_id == this.currentHeat['.key']  ){
-          num++
+      if( player.points ){
+        for( let point of player.points ){
+          if( point.player_color == player.color && point.heat_id == this.currentHeat['.key']  ){
+            num++
+          }
         }
       }
+
       return num
     }
   }

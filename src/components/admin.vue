@@ -98,32 +98,38 @@ export default {
           {
             color: "red",
             name: "",
-            number_of_ride: 0
+            number_of_ride: 0,
+            points: []
           },
           {
             color: "blue",
             name: "",
-            number_of_ride: 0
+            number_of_ride: 0,
+            points: []
           },
           {
             color: "green",
             name: "",
-            number_of_ride: 0
+            number_of_ride: 0,
+            points: []
           },
           {
             color: "pink",
             name: "",
-            number_of_ride: 0
+            number_of_ride: 0,
+            points: []
           },
           {
             color: "yellow",
             name: "",
-            number_of_ride: 0
+            number_of_ride: 0,
+            points: []
           },
           {
             color: "white",
             name: "",
-            number_of_ride: 0
+            number_of_ride: 0,
+            points: []
           }
         ]
       },
