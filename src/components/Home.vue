@@ -44,11 +44,11 @@ export default {
   name: 'Home',
   firebase: function(){
     return {
-      heats: heatsRef.orderByChild('published').equalTo( true )
+      heats: heatsRef.orderByChild('published').equalTo(true)
     }
-  },
-  created: function(){
   }
+  //created: function(){
+  //}
 }
 </script>
 

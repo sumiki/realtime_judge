@@ -37,6 +37,7 @@
                 <th>Start Time</th>
                 <th>Publish</th>
                 <th class="player">Player</th>
+                <th class="number_of_ride">Number of Ride</th>
                 <th></th>
               </tr>
             </thead>
@@ -45,8 +46,8 @@
                 <td>{{ heat.name }}</td>
                 <td>{{ heat.start_time }}</td>
                 <td>
-                  <div v-if="heat.published" v-on:click="unpublish(heat)"><button>Unpublish</button></div>
-                  <div v-else><button v-on:click="publish(heat)">Publish</button></div>
+                  <div v-if="heat.published" v-on:click="unpublish(heat)"><button>Published</button></div>
+                  <div v-else><button v-on:click="publish(heat)">Not Published</button></div>
                 </td>
                 <td>
                   <div v-for="player in heat.players">
@@ -56,10 +57,16 @@
                       <input type="text" v-model="player.name" ref="player_name" />
                       <input type="submit" class="btn btn-primary" value="Add" />
                       </form>
-
                     </div>
                     <span v-else>{{ player.name }}</span>
                   </div>
+                </td>
+                <td>
+                <div v-for="player in heat.players">
+                  <button v-on:click="plusNumberOfRide( heat, player )">↑</button> 
+                  <span v-model="player.number_of_ride">{{ player.number_of_ride }}</span> 
+                  <button v-on:click="minusNumberOfRide( heat, player )" :disabled="player.number_of_ride == 0" >↓</button>
+                </div>
                 </td>
                 <td><span class="glyphicon glyphicon-trash" v-on:click="removeHeat(heat)"></span></td>
               </tr>
@@ -91,27 +98,33 @@ export default {
         players: [
           {
             color: "red",
-            name: ""
+            name: "",
+            number_of_ride: 0
           },
           {
             color: "blue",
-            name: ""
+            name: "",
+            number_of_ride: 0
           },
           {
             color: "green",
-            name: ""
+            name: "",
+            number_of_ride: 0
           },
           {
             color: "pink",
-            name: ""
+            name: "",
+            number_of_ride: 0
           },
           {
             color: "yellow",
-            name: ""
+            name: "",
+            number_of_ride: 0
           },
           {
             color: "white",
-            name: ""
+            name: "",
+            number_of_ride: 0
           }
         ]
       },
@@ -179,6 +192,18 @@ export default {
     unpublish: function(heat){
       var item = {...heat}
       item.published = false
+      delete item['.key']
+      heatsRef.child(heat['.key']).set(item)
+    },
+    plusNumberOfRide: function(heat,player){
+      player.number_of_ride++
+      var item = {...heat}
+      delete item['.key']
+      heatsRef.child(heat['.key']).set(item)
+    },
+    minusNumberOfRide: function(heat,player){
+      player.number_of_ride--
+      var item = {...heat}
       delete item['.key']
       heatsRef.child(heat['.key']).set(item)
     }
