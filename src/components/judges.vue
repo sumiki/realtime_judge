@@ -14,57 +14,66 @@
     <div class="spacer"></div>
 
     <div class="panel panel-default">
-      <table class="table">
-        <tr>
-          <th v-for="player in currentHeat.players" >
-            <span class="color_tag" v-bind:class="[ `${player.color}_tag` ]" >{{ player.color }}</span>
-            <div>{{ player.name ? player.name.toString().slice(0,20) : '' }}</div>
-          </th>
-        </tr>
-        <tr>
-          <td v-for="player in currentHeat.players">
-          <Judge v-bind:currentHeat="currentHeat" v-bind:player="player"></Judge>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;" v-for="player in currentHeat.players">
-          <div class="panel-body">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Total:</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>1st:</th>
-                  <td>{{ firstPoint( player.color ) }}</td>
-                </tr>
-                <tr>
-                  <th>2nd:</th>
-                  <td></td>
-                </tr>
-                <tr>
-                  <th>Needs:</th>
-                  <td></td>
-                </tr>
-              </thead>
-              <thead>
-                <tr>
-                  <th>Point</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody v-if="points" style="vertical-align: top;">
-                <tr v-for="point in points" v-if="point.user_email == currentUser.email && point.heat_id == currentHeat['.key'] && point.player_color == player.color">
-                  <td>{{ point.point }}</td>
-                  <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(point)"></span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          </td>
-        </tr>
-      </table>
+      <div v-for="heat in heats">
+        <div v-if="heat['.key'] == currentHeat['.key']" >
+          <table class="table">
+            <tr>
+              <th v-for="player in heat.players" >
+                <span class="color_tag" v-bind:class="[ `${player.color}_tag` ]" >{{ player.color }}</span>
+                <div>{{ player.name ? player.name.toString().slice(0,20) : '' }}</div>
+              </th>
+            </tr>
+            <tr>
+              <td v-for="player in heat.players">
+              <Judge v-bind:heat="heat" v-bind:player="player"></Judge>
+              </td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;" v-for="player in heat.players">
+              <div class="panel-body">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Total:</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>1st:</th>
+                      <td>{{ firstPoint( player.color ) }}</td>
+                    </tr>
+                    <tr>
+                      <th>2nd:</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Needs:</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>Judged</th>
+                      <td>{{number_of_judged_point( heat, player )}} / {{ player.number_of_ride }}</td>
+                    </tr>
+                  </thead>
+                  <thead>
+                    <tr>
+                      <th>Point</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody v-if="points" style="vertical-align: top;">
+                    <tr v-for="point in points" v-if="point.user_email == currentUser.email && point.heat_id == heat['.key'] && point.player_color == player.color">
+                      <td>{{ point.point }}</td>
+                      <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(point)"></span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      
     </div>
 
   </div>
@@ -131,6 +140,15 @@ export default {
       }
       var sorted_points = target_points.sort()
       return sorted_points[ sorted_points.length - 1 ]
+    },
+    number_of_judged_point: function(currentHeat, player){
+      let num = 0
+      for( let point of this.points ){
+        if( point.player_color == player.color && point.heat_id == this.currentHeat['.key']  ){
+          num++
+        }
+      }
+      return num
     }
   }
 }
