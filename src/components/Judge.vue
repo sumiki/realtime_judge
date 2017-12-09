@@ -27,8 +27,9 @@ export default {
     return {
       newPoint: {
         point: '',
-        user_email: this.$store.state.user.email,
-      }
+        user_email: this.$store.state.user.email
+      },
+      counter: 0
     }
   },
   computed: {
@@ -50,11 +51,16 @@ export default {
       if( ! player.points ){
         player.points = []
       }
-      player.points.push( {...this.newPoint, ...{ ride_no: ( player.points.length + 1 ) }} )
+      player.points.push( {...this.newPoint, ...{ ride_no: this.next_count() }} )
       player.points
       var item = {...heat}
       delete item['.key']
       heatsRef.child(heat['.key']).set(item)
+    },
+    next_count: function(){
+      console.log('next')
+      this.counter = this.counter + 1
+      return this.counter
     }
   }
 }

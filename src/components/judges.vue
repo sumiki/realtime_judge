@@ -63,7 +63,7 @@
                   <tbody v-if="player.points" style="vertical-align: top;">
                     <tr v-for="point in player.points">
                       <td>{{ point.point }}</td>
-                      <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(player,point)"></span></td>
+                      <td><span class="glyphicon glyphicon-trash" v-on:click="removePoint(heat,player,point)"></span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -123,9 +123,16 @@ export default {
       this.$router.replace('login')
       })
     },
-    removePoint: function(player, point){
-      player.points
-      pointsRef.child(point['.key']).remove();
+    removePoint: function(heat,player, point){
+      var newPoints = []
+      for(var i=0; i < player.points.length; i++) {
+        if( player.points[i].ride_no == point.ride_no ){
+          newPoints = player.points.splice(i,1)
+        }
+      }
+      var item = {...heat}
+      delete item['.key']
+      heatsRef.child(heat['.key']).set(item)
     },
     selectHeat: function(heat){
       this.$store.commit('setCurrentHeat', heat);
@@ -146,12 +153,9 @@ export default {
       let num = 0
       if( player.points ){
         for( let point of player.points ){
-          if( point.player_color == player.color && point.heat_id == this.currentHeat['.key']  ){
-            num++
-          }
+          num++
         }
       }
-
       return num
     }
   }
