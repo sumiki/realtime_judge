@@ -5,7 +5,7 @@
   <form id="form" class="form-inline" v-on:submit.prevent="addPoint( currentHeat, player )" >
      <div class="form-group">
        <label for="point">Point:</label>
-       <input type="text" id="point" class="form-control" v-model="newPoint.point" autocomplete="off" maxlength="2" size="2" />
+       <input type="text" id="point" class="form-control" v-model="newPoint.point" autocomplete="off" maxlength="2" size="2" :disabled="player.number_of_ride <= number_of_judged_point( player )" />
        <input type="submit" class="btn btn-primary" value="Add Point" />
        <div class="errors" >{{ point_error }}</div>
      </div>
@@ -52,7 +52,7 @@ export default {
         player.points = []
       }
       player.points.push( {...this.newPoint, ...{ ride_no: this.next_count() }} )
-      player.points
+      this.newPoint.point = ''
       var item = {...heat}
       delete item['.key']
       heatsRef.child(heat['.key']).set(item)
@@ -61,6 +61,15 @@ export default {
       console.log('next')
       this.counter = this.counter + 1
       return this.counter
+    },
+    number_of_judged_point: function(player){
+      let num = 0
+      if( player.points ){
+        for( let point of player.points ){
+          num++
+        }
+      }
+      return num
     }
   }
 }

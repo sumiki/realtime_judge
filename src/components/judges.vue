@@ -26,6 +26,9 @@
             <tr>
               <td v-for="player in heat.players">
               <Judge v-bind:currentHeat="heat" v-bind:player="player"></Judge>
+                <div v-if="player.number_of_ride > number_of_judged_point( heat, player )" >
+                  red
+                </div>
               </td>
             </tr>
             <tr>
