@@ -34,8 +34,12 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>
+                      <th>Order</th>
+                      <td>{{ ranking(heat, player) }}</td>
+                    </tr>
+                    <tr>
                       <th>Total:</th>
-                      <td>{{ totalPoint( player ) }}</td>
+                      <td>{{ totalPoint( player ).toString() }}</td>
                     </tr>
                     <tr>
                       <th>1st:</th>
@@ -47,7 +51,7 @@
                     </tr>
                     <tr>
                       <th>Needs:</th>
-                      <td></td>
+                      <td>{{needsPoint( heat, player )}}</td>
                     </tr>
                     <tr>
                       <th>Judged</th>
@@ -149,7 +153,7 @@ export default {
     totalPoint: function(player){
       var fp = this.firstPoint(player);
       var sp = this.secondPoint(player);
-      return ( parseInt(fp) + parseInt(sp) ).toString()
+      return ( parseInt(fp) + parseInt(sp) )
     },
     firstPoint: function(player){
       var sorted_points = this.sorted_points( player )
@@ -165,6 +169,26 @@ export default {
         return sorted_points[ sorted_points.length - 2 ]
       } else {
         return 0
+      }
+    },
+    pointOrder: function(heat, player){
+      var sortable_players = heat.players.slice()
+      var orderedPlayers = sortable_players.sort((a, b) => this.totalPoint(a) - this.totalPoint(b)).reverse()
+      return orderedPlayers
+    },
+    ranking: function(heat, player){
+      var orderedPlayers = this.pointOrder(heat, player)
+      var colors_order = orderedPlayers.map( function(player){ return player.color } )
+      return ( colors_order.indexOf( player.color ) + 1 ) 
+    },
+    needsPoint: function(heat, player){
+      var point_orders = this.pointOrder(heat, player);
+      var ranking = this.ranking(heat, player);
+      if( ranking == 1 ){
+        return '-'
+      } else {
+        return this.totalPoint( point_orders[0] ) - this.totalPoint( point_orders[ranking -  1])
+
       }
     },
     number_of_judged_point: function(currentHeat, player){
