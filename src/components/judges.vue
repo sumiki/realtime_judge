@@ -145,10 +145,10 @@ export default {
       var target_points = []
       if(player.points){
         for( let point of player.points ){
-          target_points.push( point.point )
+          target_points.push( parseInt(point.point) )
         }
       }
-      return target_points.sort()
+      return target_points.sort(function(a, b){return a-b})
     },
     totalPoint: function(player){
       var fp = this.firstPoint(player);
