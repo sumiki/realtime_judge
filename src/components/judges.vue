@@ -26,9 +26,6 @@
             <tr>
               <td v-for="player in heat.players">
               <Judge v-bind:currentHeat="heat" v-bind:player="player"></Judge>
-                <div v-if="player.number_of_ride > number_of_judged_point( heat, player )" >
-                  red
-                </div>
               </td>
             </tr>
             <tr>
@@ -38,7 +35,7 @@
                   <thead>
                     <tr>
                       <th>Total:</th>
-                      <td></td>
+                      <td>{{ totalPoint( player ) }}</td>
                     </tr>
                     <tr>
                       <th>1st:</th>
@@ -46,7 +43,7 @@
                     </tr>
                     <tr>
                       <th>2nd:</th>
-                      <td></td>
+                      <td>{{ secondPoint( player ) }}</td>
                     </tr>
                     <tr>
                       <th>Needs:</th>
@@ -140,17 +137,35 @@ export default {
     selectHeat: function(heat){
       this.$store.commit('setCurrentHeat', heat);
     },
-    firstPoint: function(player){
+    sorted_points: function(player){
       var target_points = []
       if(player.points){
         for( let point of player.points ){
-          if( point.player_color == player.color && point.heat_id == this.currentHeat['.key']  ){
-            target_points.push( point.point )
-          }
+          target_points.push( point.point )
         }
       }
-      var sorted_points = target_points.sort()
-      return sorted_points[ sorted_points.length - 1 ]
+      return target_points.sort()
+    },
+    totalPoint: function(player){
+      var fp = this.firstPoint(player);
+      var sp = this.secondPoint(player);
+      return ( parseInt(fp) + parseInt(sp) ).toString()
+    },
+    firstPoint: function(player){
+      var sorted_points = this.sorted_points( player )
+      if( sorted_points && sorted_points.length > 0 ){
+        return sorted_points[ sorted_points.length - 1 ]
+      } else {
+        return 0
+      }
+    },
+    secondPoint: function(player){
+      var sorted_points = this.sorted_points( player )
+      if( sorted_points && sorted_points.length > 1 ){
+        return sorted_points[ sorted_points.length - 2 ]
+      } else {
+        return 0
+      }
     },
     number_of_judged_point: function(currentHeat, player){
       let num = 0

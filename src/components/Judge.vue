@@ -1,7 +1,12 @@
 <template>
 
   <div>
-  <div>Add Point</div>
+  <div>
+    <div>Add Point</div>
+    <div v-if="player.number_of_ride > number_of_judged_point( player )" >
+      <div class="judge_red_mark"></div>
+    </div>
+  </div>
   <form id="form" class="form-inline" v-on:submit.prevent="addPoint( currentHeat, player )" >
      <div class="form-group">
        <label for="point">Point:</label>
@@ -80,4 +85,11 @@ export default {
 div.errors{
   color: red;
 }
+.judge_red_mark {
+    height:10px;
+    width:10px;
+    background-color:#ff0000;
+    border-radius:100%;
+}
+
 </style>
